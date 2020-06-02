@@ -123,6 +123,8 @@ public class JTAEnvironmentBean implements JTAEnvironmentBeanMBean
 	private boolean transactionToThreadListenersEnabled = false;
 
 	private List<String> xaResourceIsSameRMClassNames = new ArrayList<>();
+	private volatile boolean autoCloseXAResourcesAfterRecovery = false;
+
 	/**
      * Returns true if subtransactions are allowed.
      * Warning: subtransactions are not JTA spec compliant and most XA resource managers don't understand them.
@@ -1340,6 +1342,7 @@ public class JTAEnvironmentBean implements JTAEnvironmentBeanMBean
 		this.transactionToThreadListenersEnabled = transactionToThreadListenersEnabled;
 	}
 
+<<<<<<< HEAD
     /**
      * Returns the class names of the XAResource types whose isSameRM method is overridden to return false.
      * This override is useful because some drivers do not implement isSameRM correctly.
@@ -1375,5 +1378,29 @@ public class JTAEnvironmentBean implements JTAEnvironmentBeanMBean
                 this.xaResourceIsSameRMClassNames = new ArrayList<>(xaResourceIsSameRMClassNames);
             }
         }
+=======
+
+    /**
+     * Informs if the {@link AutoCloseable} {@link javax.transaction.xa.XAResource} should closed
+     * at the end of each recovery cycle.
+     *
+     * @return true when {@link AutoCloseable} {@link javax.transaction.xa.XAResource} will be closed at the end
+     *         of each the recovery cycle; false otherwise
+     */
+    public synchronized boolean isAutoCloseXAResourcesAfterRecovery() {
+        return autoCloseXAResourcesAfterRecovery;
+    }
+
+    /**
+     * When this flag is set to true then the XA recovery tries to automatically close any {@link javax.transaction.xa.XAResource}
+     * which implements the {@link AutoCloseable} interface just after the recovery scan finishes within one recovery cycle.
+     * The recovery expects to get a brand new {@link javax.transaction.xa.XAResource} when the next recovery cycle begins.
+     *
+     * @param autoCloseXAResourcesAfterRecovery set true if AutoCloseable XAResource should be closed
+     *                                          when recovery process finishes with it within one recovery cycle
+     */
+    public synchronized void setAutoCloseXAResourcesAfterRecovery(boolean autoCloseXAResourcesAfterRecovery) {
+        this.autoCloseXAResourcesAfterRecovery = autoCloseXAResourcesAfterRecovery;
+>>>>>>> cb0e8712b ([JBTM-3325] automatically close AutoCloseable XAResource on finishing recovery)
     }
 }

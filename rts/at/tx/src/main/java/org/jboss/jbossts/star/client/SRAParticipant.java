@@ -195,22 +195,4 @@ public abstract class SRAParticipant {
     private String getStatusUrl(String sraId) {
         return String.format("%s/%s/activity/status", context.getBaseUri(), SRAClient.getSRAId(sraId));
     }
-
-    public enum SRAStatus {
-        TransactionRollbackOnly,
-        TransactionRollingBack,
-        TransactionRolledBack,
-        TransactionCommitting,
-        TransactionCommitted,
-        TransactionHeuristicRollback,
-        TransactionHeuristicCommit,
-        TransactionHeuristicHazard,
-        TransactionHeuristicMixed,
-        TransactionPreparing,
-        TransactionPrepared,
-        TransactionActive,
-        TransactionCommittedOnePhase,
-        TransactionReadOnly,
-        TransactionStatusNone
-    }
 }

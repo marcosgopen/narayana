@@ -1,30 +1,27 @@
     podTemplate {
         node('jnlp-agent') {
             stage('build') {
-                tools {
-                       jdk "openJDK11"
-                    }    
-                steps {
-                    sh '''#!/bin/bash
+                tool name: 'openJDK11', type: "jdk"
+                      
+                    git branch: 'sonarqube', url: 'https://github.com/marcosgopen/narayana'
                     
-                    pwd
-                    cd narayana
+                    sh '''#!/bin/bash -xe
+                    
                     ./build.sh -Pcommunity -Prelease clean install -DskipTests
                     '''
-                }
+                
             }
             stage('Sonarqube') {
-                environment {
-                    scannerHome = tool 'SonarQubeScanner'
-                }    
-                steps {
+                
+                    def scannerHome = tool 'SonarQubeScanner'
+                
                     withSonarQubeEnv("Red Hat's SonarQube Server") {
                         sh "${scannerHome}/bin/sonar-scanner"
                     }        
                     timeout(time: 1, unit: 'HOURS') {
                         waitForQualityGate abortPipeline: true
                     }
-                }
+                
             }
         }
     }

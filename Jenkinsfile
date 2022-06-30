@@ -17,10 +17,11 @@
                 
                     withSonarQubeEnv("Red Hat's SonarQube Server") {
                         sh "${scannerHome}/bin/sonar-scanner"
-                    }        
-                    timeout(time: 5, unit: 'HOURS') {
-                        waitForQualityGate abortPipeline: true
                     }
+                    //this needs a webhook to be configured        
+                    //timeout(time: 5, unit: 'HOURS') {
+                        //waitForQualityGate abortPipeline: true
+                    //}
                 
             }
         }

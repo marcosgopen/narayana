@@ -1,6 +1,5 @@
 package org.jboss.narayana.rest.bridge.inbound.test.common;
 
-import jakarta.transaction.SystemException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -28,7 +27,7 @@ public class ResourceWithTransactionalAnnotation {
     @POST
     @Path(NEVER_SEGMENT)
     @Transactional(Transactional.TxType.NEVER)
-    public Response transactionalNever() throws SystemException {
+    public Response transactionalNever(){
         return Response.ok().build();
     }
 

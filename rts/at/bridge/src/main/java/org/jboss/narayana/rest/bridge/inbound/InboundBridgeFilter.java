@@ -30,6 +30,7 @@ import java.util.Map;
 
 import jakarta.annotation.Priority;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.Stateful;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Priorities;
@@ -156,6 +157,7 @@ public final class InboundBridgeFilter implements ContainerRequestFilter, Contai
 
         // CDI transactional method is declared by annotation @Transactional, EJB class is transactional by default
         return method.isAnnotationPresent(Transactional.class) || method.getDeclaringClass().isAnnotationPresent(Transactional.class)
+                || method.isAnnotationPresent(TransactionAttribute.class) || method.getDeclaringClass().isAnnotationPresent(TransactionAttribute.class)
                 || method.getDeclaringClass().isAnnotationPresent(Stateless.class)
                 || method.getDeclaringClass().isAnnotationPresent(Stateful.class);
     }

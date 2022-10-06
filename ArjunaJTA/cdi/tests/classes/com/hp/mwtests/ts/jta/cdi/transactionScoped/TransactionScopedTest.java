@@ -26,7 +26,7 @@ import org.junit.Assert;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Test;
@@ -72,7 +72,10 @@ public class TransactionScopedTest {
         return  ShrinkWrap.create(JavaArchive.class, "test.jar")
                 .addClass(TestCDITransactionScopeBean.class)
                 .addClass(TestCDITransactionScopeBean2.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(
+                        new StringAsset("Dependencies: org.jboss.jandex, org.jboss.logging\n"),
+                        "MANIFEST.MF")
+                .addAsManifestResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
     }
 
     @After

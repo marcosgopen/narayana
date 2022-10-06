@@ -33,7 +33,7 @@ import jakarta.transaction.Transactional.TxType;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 import org.junit.Test;
@@ -65,7 +65,11 @@ public class ConcurrentTransactionalTest {
     public static WebArchive createTestArchive() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
                 .addPackage("com.hp.mwtests.ts.jta.cdi.transactional")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(
+                        new StringAsset("Dependencies: org.jboss.jandex, org.jboss.logging\n"),
+                        "MANIFEST.MF")
+                .addAsWebInfResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
+
     }
 
     @Test

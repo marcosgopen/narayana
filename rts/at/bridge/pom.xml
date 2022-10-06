@@ -68,23 +68,23 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-core-spi</artifactId>
       <version>${version.org.jboss.resteasy}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
-      <version>3.1.0</version>
+      <version>${version.jakarta.ws.rs.jakarta-ws-rs-api}</version>
     </dependency>
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-client</artifactId>
       <version>${version.org.jboss.resteasy}</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -95,22 +95,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.ironjacamar</groupId>
-      <artifactId>ironjacamar-spec-api</artifactId>
-      <version>${version.org.jboss.ironjacamar}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>jakarta.transaction</groupId>
       <artifactId>jakarta.transaction-api</artifactId>
-      <version>2.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.transaction</groupId>
-      <artifactId>jboss-transaction-api_1.2_spec</artifactId>
-      <version>${version.org.jboss.spec.javax.transaction}</version>
-      <scope>provided</scope>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
@@ -119,6 +106,11 @@
       <version>4.0.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <version>4.0.1</version>
+    </dependency>
     <dependency>
       <groupId>org.jboss.arquillian.junit</groupId>
       <artifactId>arquillian-junit-container</artifactId>
@@ -132,7 +124,6 @@
       <version>${version.junit}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>jakarta.json</groupId>
       <artifactId>jakarta.json-api</artifactId>
@@ -140,8 +131,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
+      <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
+      <artifactId>jackson-jakarta-rs-json-provider</artifactId>
       <version>${version.fasterxml.jackson}</version>
       <scope>test</scope>
     </dependency>
@@ -169,11 +160,6 @@
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
       <version>4.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jaxb</groupId>
-      <artifactId>jaxb-runtime</artifactId>
-      <version>4.0.1</version>
     </dependency>
 
   </dependencies>
@@ -282,7 +268,7 @@
         </dependency>
         <dependency>
           <groupId>org.jboss.arquillian.protocol</groupId>
-          <artifactId>arquillian-protocol-servlet</artifactId>
+          <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
           <version>${version.org.jboss.arquillian.core}</version>
           <scope>test</scope>
         </dependency>

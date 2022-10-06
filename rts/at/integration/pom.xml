@@ -58,12 +58,17 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <version>${version.jakarta.ws.rs.jakarta-ws-rs-api}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
       <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
       <version>${version.javax.ws.rs-api}</version>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>org.jboss.byteman</groupId>
       <artifactId>byteman</artifactId>
@@ -92,8 +97,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
+      <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
+      <artifactId>jackson-jakarta-rs-json-provider</artifactId>
       <version>${version.fasterxml.jackson}</version>
       <scope>test</scope>
     </dependency>

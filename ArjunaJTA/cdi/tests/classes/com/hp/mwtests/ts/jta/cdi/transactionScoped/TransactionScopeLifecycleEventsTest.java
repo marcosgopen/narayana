@@ -54,8 +54,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 import org.junit.Before;
@@ -99,7 +98,10 @@ public class TransactionScopeLifecycleEventsTest {
     public static JavaArchive createTestArchive() {
         return ShrinkWrap.create(JavaArchive.class, "test.jar")
             .addClass(TransactionScopeLifecycleEventsTest.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsManifestResource(
+                    new StringAsset("Dependencies: org.jboss.jandex, org.jboss.logging\n"),
+                    "MANIFEST.MF")
+            .addAsManifestResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
     }
 
     @Before

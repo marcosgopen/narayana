@@ -11,7 +11,7 @@ package com.hp.mwtests.ts.jta.cdi.transactional.stereotype.ejb;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +40,8 @@ public class CdiWeldFailureWithEjbTest {
     public static WebArchive createTestArchive() {
         return ShrinkWrap.create(WebArchive.class, "weld-failure-wit-ejb.war")
                 .addPackage(CdiWeldFailureWithEjbTest.class.getPackage())
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
+
     }
 
     @Test

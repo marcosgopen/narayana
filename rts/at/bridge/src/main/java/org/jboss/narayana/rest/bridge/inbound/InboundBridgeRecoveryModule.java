@@ -102,12 +102,13 @@ public class InboundBridgeRecoveryModule implements RecoveryModule {
         for (Uid uid : uids) {
             try {
                 final SubordinateTransaction st = SubordinationManager.getTransactionImporter().recoverTransaction(uid);
+                addBridgesToMapping();
             } catch (XAException e) {
                 RESTATLogger.atI18NLogger.warn_inboundBridgeRecoveryModulePeriodicWorkSecondPass(e.getMessage(), e);
+            }catch(Exception e2){
+                e2.printStackTrace();
             }
         }
-
-        addBridgesToMapping();
     }
 
     /**

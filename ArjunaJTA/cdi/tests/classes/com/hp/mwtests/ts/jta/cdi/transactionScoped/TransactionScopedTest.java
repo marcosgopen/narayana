@@ -22,22 +22,7 @@
 
 package com.hp.mwtests.ts.jta.cdi.transactionScoped;
 
-import org.junit.Assert;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import jakarta.enterprise.context.ContextNotActiveException;
-import jakarta.inject.Inject;
-import javax.naming.InitialContext;
-import jakarta.transaction.Transaction;
-import jakarta.transaction.TransactionManager;
-import jakarta.transaction.UserTransaction;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +33,26 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.assertTrue;
+import javax.naming.InitialContext;
+
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.arjuna.ats.jta.cdi.TransactionExtension;
+
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.UserTransaction;
 
 /**
  * @author paul.robinson@redhat.com 01/05/2013
@@ -72,7 +76,8 @@ public class TransactionScopedTest {
         return  ShrinkWrap.create(JavaArchive.class, "test.jar")
                 .addClass(TestCDITransactionScopeBean.class)
                 .addClass(TestCDITransactionScopeBean2.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsServiceProvider(Extension.class, TransactionExtension.class)
+                .addAsManifestResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
     }
 
     @After

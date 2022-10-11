@@ -22,17 +22,18 @@
 
 package com.hp.mwtests.ts.jta.cdi.transactional.stereotype;
 
-import jakarta.enterprise.inject.Stereotype;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.arjuna.ats.jta.cdi.TransactionExtension;
+
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
 
 @RunWith(Arquillian.class)
 public class TransitiveStereotypeTest {
@@ -49,7 +50,8 @@ public class TransitiveStereotypeTest {
             .addClasses(StereotypeBean.class, StereotypeTransitiveBean.class, TestException.class,
                 TransactionalNeverStereotype.class, TransactionalRequiredStereotype.class, TransitiveStereotypeTest.class,
                 TransitiveToNeverNoTransactional.class, TransitiveToRequiredNoTransactional.class)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsServiceProvider(Extension.class, TransactionExtension.class)
+            .addAsWebInfResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
     }
 
     @Test

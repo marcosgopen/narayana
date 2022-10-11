@@ -22,17 +22,20 @@
 
 package com.hp.mwtests.ts.jta.cdi.transactional;
 
-import org.jboss.logging.Logger;
-import org.junit.Assert;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.arjuna.ats.jta.cdi.TransactionExtension;
+import com.arjuna.ats.jta.cdi.async.ContextPropagationAsyncHandler;
+
+import jakarta.enterprise.inject.spi.Extension;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
@@ -59,14 +62,13 @@ public class TransactionalImplTest {
     AbstractBusinessLogic abstractBusinessLogic;
 
     @Deployment
-    public static WebArchive createTestArchive() {
+    public static JavaArchive createTestArchive() {
 
-        return ShrinkWrap.create(WebArchive.class, "test.war")
-                .addPackage("com.hp.mwtests.ts.jta.cdi.transactional")
-                .addAsWebInfResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
-
-//        .addAsManifestResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
-
+        return ShrinkWrap.create(JavaArchive.class, "test.jar")
+                .addPackage(TestTransactionalBean.class.getPackageName())
+                .addPackage(ContextPropagationAsyncHandler.class.getPackage())
+                .addAsServiceProvider(Extension.class, TransactionExtension.class)
+                .addAsManifestResource("beans.xml");
     }
 
     @After

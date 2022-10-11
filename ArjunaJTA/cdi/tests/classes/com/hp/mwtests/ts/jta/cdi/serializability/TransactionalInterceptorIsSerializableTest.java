@@ -3,12 +3,15 @@ package com.hp.mwtests.ts.jta.cdi.serializability;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.arjuna.ats.jta.cdi.TransactionExtension;
+
+import jakarta.enterprise.inject.spi.Extension;
 import jakarta.inject.Inject;
 
 /**
@@ -28,7 +31,8 @@ public class TransactionalInterceptorIsSerializableTest {
 
         return ShrinkWrap.create(JavaArchive.class, "test.jar")
                 .addClass(SessionFoo.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsServiceProvider(Extension.class, TransactionExtension.class)
+                .addAsManifestResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
     }
 
     @Test

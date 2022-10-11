@@ -22,52 +22,43 @@
 
 package com.hp.mwtests.ts.jta.cdi.transactionScoped;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.BeforeDestroyed;
-import jakarta.enterprise.context.ContextNotActiveException;
-import jakarta.enterprise.context.Destroyed;
-import jakarta.enterprise.context.Initialized;
-
-import jakarta.enterprise.context.spi.Context;
-
-import jakarta.enterprise.event.Observes;
-
-import jakarta.enterprise.event.TransactionPhase;
-import jakarta.enterprise.inject.spi.BeanManager;
-
-import jakarta.inject.Inject;
-
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.Status;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.Transaction;
-import jakarta.transaction.TransactionSynchronizationRegistry;
-import jakarta.transaction.Transactional;
-import jakarta.transaction.TransactionManager;
-import jakarta.transaction.TransactionScoped;
-import jakarta.transaction.UserTransaction;
-
-import org.jboss.arquillian.container.test.api.Deployment;
-
-import org.jboss.arquillian.junit.Arquillian;
-
-import org.jboss.logging.Logger;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import org.junit.runner.RunWith;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.logging.Logger;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.arjuna.ats.jta.cdi.TransactionExtension;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.BeforeDestroyed;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.context.Destroyed;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.context.spi.Context;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.event.TransactionPhase;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.TransactionScoped;
+import jakarta.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.UserTransaction;
 
 /**
  * @author <a href="https://about.me/lairdnelson"
@@ -99,7 +90,8 @@ public class TransactionScopeLifecycleEventsTest {
     public static JavaArchive createTestArchive() {
         return ShrinkWrap.create(JavaArchive.class, "test.jar")
             .addClass(TransactionScopeLifecycleEventsTest.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsServiceProvider(Extension.class, TransactionExtension.class)
+            .addAsManifestResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
     }
 
     @Before

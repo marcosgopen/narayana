@@ -26,18 +26,22 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import jakarta.annotation.Resource;
-import jakarta.ejb.TransactionManagementType;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional.TxType;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.arjuna.ats.jta.cdi.TransactionExtension;
+
+import jakarta.annotation.Resource;
+import jakarta.ejb.TransactionManagementType;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional.TxType;
 
 /**
  * <p>
@@ -65,7 +69,8 @@ public class ConcurrentTransactionalTest {
     public static WebArchive createTestArchive() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
                 .addPackage("com.hp.mwtests.ts.jta.cdi.transactional")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsServiceProvider(Extension.class, TransactionExtension.class)
+                .addAsWebInfResource(new StringAsset("<beans bean-discovery-mode=\"all\"></beans>"), "beans.xml");
     }
 
     @Test

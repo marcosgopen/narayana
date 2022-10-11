@@ -9,6 +9,7 @@ import org.jboss.narayana.rest.bridge.inbound.test.common.ResourceWithTransactio
 import org.jboss.narayana.rest.bridge.inbound.test.common.ResourceWithTransactionalAnnotation;
 import org.jboss.narayana.rest.bridge.inbound.test.common.ResourceWitoutAnnotation;
 
+import jakarta.enterprise.inject.spi.Extension;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
 
@@ -19,6 +20,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.arjuna.ats.jta.cdi.TransactionExtension;
 
 import jakarta.ws.rs.core.Link;
 
@@ -50,7 +53,8 @@ public class AnnotationsTestCase extends AbstractTestCase {
     public static WebArchive createDeployment() {
         return getEmptyWebArchive()
                 .addClasses(ResourceWitoutAnnotation.class, ResourceWithTransactionalAnnotation.class,
-                        ResourceWithTransactionAttributeAnnotation.class)
+                        ResourceWithTransactionAttributeAnnotation.class, TransactionExtension.class)
+                .addAsServiceProvider(Extension.class, TransactionExtension.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource("web.xml", "web.xml");
     }

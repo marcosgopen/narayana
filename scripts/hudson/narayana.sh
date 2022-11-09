@@ -210,8 +210,8 @@ function init_test_options {
     [ $NARAYANA_TESTS ] || NARAYANA_TESTS=0	# run the narayana surefire tests
     [ $NARAYANA_BUILD ] || NARAYANA_BUILD=0 # build narayana
     [ $AS_DOWNLOAD ] && [ -z "$JBOSS_HOME" ] || AS_DOWNLOAD=0 # download AS when JBOSS_HOME is not provided
-    [ $AS_CLONE ]  && [ -z "$JBOSS_HOME" ] || AS_CLONE=0 # git clone the AS when JBOSS_HOME is not provided
-    [ $AS_BUILD ]  && [ -z "$JBOSS_HOME" ] || AS_BUILD=0 # build the AS
+    [ $AS_CLONE ] && [ -z "$WILDFLY_CLONED_REPO" ] || AS_CLONE=0 # git clone the AS when JBOSS_HOME is not provided
+    [ $AS_BUILD ] && [ -z "$JBOSS_HOME" ] || AS_BUILD=0 # build the AS
     [ $AS_TESTS ] || AS_TESTS=0 # Run WildFly/JBoss EAP testsuite
     [ $COMPENSATIONS_TESTS ] || COMPENSATIONS_TESTS=0 # compensations tests
     [ $XTS_TESTS ] || XTS_TESTS=0 # XTS tests
@@ -460,7 +460,7 @@ function download_as {
   [ $? -ne 0 ] && fatal "Cannot unzip wildfly-latest-SNAPSHOT.zip"
   rm wildfly-latest-SNAPSHOT.zip
   zip=$(ls wildfly-*-SNAPSHOT.zip) # example the current latest is wildfly-preview-27.0.0.Beta1-SNAPSHOT.zip
-=======
+
   # the artifacts.zip may be wrapping several zip files: artifacts.zip -> wildfly-preview-latest-SNAPSHOT.zip -> wildfly-###-SNAPSHOT.zip
   local wildflyLatestZipWrapper=$(ls wildfly-preview-latest-*.zip | head -n 1)
   if [ -f "${wildflyLatestZipWrapper}" ]; then # wrapper zip exists, let's unzip it to proceed further to distro zip

@@ -130,6 +130,7 @@
     <module>STM</module>
     <module>vertx</module>
     <module>rts</module>
+    <module>narayana-bom</module>
   </modules>
   <scm>
     <connection>scm:git:git@github.com:jbosstm/narayana.git</connection>

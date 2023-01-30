@@ -38,6 +38,7 @@
     <module>jbossxts</module>
     <module>localjunit</module>
   </modules>
+
   <dependencies>
     <dependency>
       <groupId>com.sun.xml.ws</groupId>

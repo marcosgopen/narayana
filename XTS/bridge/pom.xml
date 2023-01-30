@@ -23,21 +23,31 @@
   <packaging>jar</packaging>
   <name>Narayana: XTS bridge</name>
   <description>Narayana: XTS bridge</description>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.narayana</groupId>
+        <artifactId>narayana-bom</artifactId>
+        <version>6.0.0.Final-SNAPSHOT</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.jboss.narayana.xts</groupId>
       <artifactId>wscf11</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.xts</groupId>
       <artifactId>wstx11</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.xts</groupId>
       <artifactId>wstx11</artifactId>
-      <version>${project.version}</version>
       <classifier>api</classifier>
     </dependency>
   </dependencies>

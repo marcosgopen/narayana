@@ -50,5 +50,6 @@ jobs:
             **/*tx-object-store.zip
             **/target/*surefire-reports*/**
             **/target/*failsafe-reports*/**
+            narayana-full/target/invoker/**
           if-no-files-found: error
 

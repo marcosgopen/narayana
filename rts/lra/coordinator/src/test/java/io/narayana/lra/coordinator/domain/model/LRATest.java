@@ -58,6 +58,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -774,6 +775,29 @@ public class LRATest {
         assertEquals(compensations + 1, compensateCount.get());
         LRAStatus status = getStatus(new URI(lraId));
         assertTrue("LRA should have cancelled", status == null || status == LRAStatus.Cancelled);
+    }
+
+    /**
+     * test timeout limit
+     */
+//    @Test
+    public void testTimeLimit() {
+        NarayanaLRAClient lraClient = new NarayanaLRAClient();
+        // start two LRAs on the current thread
+        URI lra1 = lraClient.startLRA(null, "lra1", 1L, ChronoUnit.SECONDS);
+        assertEquals("lra1 is not associated with the current thread", lra1, lraClient.getCurrent());
+        URI lra2 = lraClient.startLRA(null, "lra2", 1L, ChronoUnit.SECONDS);
+        assertEquals("lra2 is not associated with the current thread", lra2, lraClient.getCurrent());
+        // a) wait for the time limit to be reached
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        }
+        catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        assertNull("all LRAs are closed so none should be associated with the calling thread", lraClient.getCurrent());
+        lraClient.close();
     }
 
     private void runLRA(boolean cancel) {

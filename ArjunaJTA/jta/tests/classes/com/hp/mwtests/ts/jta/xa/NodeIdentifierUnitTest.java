@@ -4,6 +4,7 @@
  */
 package com.hp.mwtests.ts.jta.xa;
 
+import com.arjuna.ats.arjuna.common.CoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.CoreEnvironmentBeanException;
 import com.arjuna.ats.arjuna.common.Uid;
 import com.arjuna.ats.arjuna.common.arjPropertyManager;
@@ -13,6 +14,7 @@ import com.arjuna.ats.jta.xa.XidImple;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -26,14 +28,14 @@ public class NodeIdentifierUnitTest
 {
     // TxControl initialises the node id in a static initializer so use just a test
     @BeforeClass
-    public static void before() throws NoSuchAlgorithmException {
-      for (int i = 1; i < 1000; i++) {
-        String random = UUID.randomUUID().toString(); // String form of a random UUID
+    public static void before() throws NoSuchAlgorithmException, CoreEnvironmentBeanException {
+        for (int i = 1; i < 5000; i++) {
+            String random = UUID.randomUUID().toString(); // String form of a random UUID
 
-        assertEquals(36, random.length()); // a UUID consists of 32 hex digits along with 4 “-” symbols
+            assertEquals(36, random.length()); // a UUID consists of 32 hex digits along with 4 “-” symbols
 
-        setNodeIdentifier(random); // set nodeIdentifier in the config bean
-      }
+            setNodeIdentifier(random); // set nodeIdentifier in the config bean
+        }
     }
 
     @Test
@@ -59,15 +61,16 @@ public class NodeIdentifierUnitTest
         assertEquals(tmNodeName, xaNodeNameFromBytes);
     }
 
-    private static void setNodeIdentifier(String nodeIdentifier) throws NoSuchAlgorithmException {
+    private static void setNodeIdentifier(String nodeIdentifier)
+            throws NoSuchAlgorithmException, CoreEnvironmentBeanException {
         byte[] nodeIdentifierAsBytes = nodeIdentifier.getBytes();
         MessageDigest messageDigest224 = MessageDigest.getInstance("SHA-224");
         byte[] digest = messageDigest224.digest(nodeIdentifierAsBytes);
+        assertTrue(
+                "length is " + new String(digest, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8).length
+                        + ", unable to set nodeIdentifier.",
+                new String(digest, StandardCharsets.UTF_8)
+                        .getBytes(StandardCharsets.UTF_8).length <= CoreEnvironmentBean.NODE_NAME_SIZE);
 
-        try {
-            arjPropertyManager.getCoreEnvironmentBean().setNodeIdentifier(digest);
-        } catch (CoreEnvironmentBeanException e) {
-            fail("unable to set nodeIdentifier: " + e.getMessage());
-        }
     }
 }

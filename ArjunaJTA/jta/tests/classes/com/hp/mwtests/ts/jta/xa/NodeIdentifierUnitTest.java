@@ -27,11 +27,13 @@ public class NodeIdentifierUnitTest
     // TxControl initialises the node id in a static initializer so use just a test
     @BeforeClass
     public static void before() throws NoSuchAlgorithmException {
+      for (int i = 1; i < 1000; i++) {
         String random = UUID.randomUUID().toString(); // String form of a random UUID
 
         assertEquals(36, random.length()); // a UUID consists of 32 hex digits along with 4 “-” symbols
 
         setNodeIdentifier(random); // set nodeIdentifier in the config bean
+      }
     }
 
     @Test

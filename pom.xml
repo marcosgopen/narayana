@@ -177,7 +177,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <server.jvm.args>${jvm.args.other} ${jvm.args.memory} ${jvm.args.debug} ${jvm.args.modular}</server.jvm.args>
     <skipMavenDeployMojo>false</skipMavenDeployMojo>
-    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+    <skipNexusStagingDeployMojo>false</skipNexusStagingDeployMojo>
     <!-- Sortpom is enabled by default, but it could be disabled in sub-modules setting sortpom.skip = true -->
     <sortpom.skip>false</sortpom.skip>
     <!-- The surefire/failsafe test execution logs goes to a file by default -->
@@ -302,7 +302,7 @@
           <version>${version.org.sonatype.plugins.nexus-staging-maven-plugin}</version>
           <extensions>true</extensions>
           <configuration>
-            <serverId>jboss-releases-repository</serverId>
+            <serverId>jboss-snapshots-repository</serverId>
             <nexusUrl>https://repository.jboss.org/nexus/</nexusUrl>
             <autoReleaseAfterClose>true</autoReleaseAfterClose>
             <skipNexusStagingDeployMojo>${skipNexusStagingDeployMojo}</skipNexusStagingDeployMojo>

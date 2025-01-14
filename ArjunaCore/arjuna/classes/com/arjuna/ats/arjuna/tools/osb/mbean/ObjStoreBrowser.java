@@ -81,6 +81,13 @@ public class ObjStoreBrowser implements ObjStoreBrowserMBean {
                     "StateManager/BasicAction/TwoPhaseCoordinator/AtomicAction",
                     null
             ),
+            new OSBTypeHandler(
+                    true,
+                    "io.narayana.lra.coordinator.domain.model.LongRunningAction",
+                    "io.narayana.lra.coordinator.tools.osb.mbean.LRAActionBean",
+                    "/StateManager/BasicAction/LongRunningAction",
+                    null
+            ),
     };
 
     private static final OSBTypeHandler[] defaultJTSOsbTypes = {

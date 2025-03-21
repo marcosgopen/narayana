@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Vector;
 
 import com.arjuna.ats.arjuna.AtomicAction;
+import com.arjuna.ats.arjuna.common.RecoveryEnvironmentBean;
 import com.arjuna.ats.arjuna.common.Uid;
 import com.arjuna.ats.arjuna.common.recoveryPropertyManager;
 import com.arjuna.ats.arjuna.coordinator.ActionStatus;
@@ -216,12 +217,15 @@ public class AtomicActionRecoveryModule implements RecoveryModule {
                             _transactionType) != StateStatus.OS_UNKNOWN) {
                         RecoverAtomicAction rcvAtomicAction = doRecoverTransaction(currentUid);
 
-                        if (isWaitForWorkLeftToDo && Objects.nonNull(rcvAtomicAction)) {
+                        if (Objects.nonNull(rcvAtomicAction)) {
                             /*
                              * hasFailedParticipants() relies on reportHeuristics being set to true
                              * during replay_completion in RecoverAtomicAction
                              */
-                            if (rcvAtomicAction.hasFailedParticipants() || rcvAtomicAction.hasPreparedParticipants()) {
+                            if (rcvAtomicAction.hasFailedParticipants() ||
+                                    rcvAtomicAction.hasPreparedParticipants() ||
+                                    (recoveryPropertyManager.getRecoveryEnvironmentBean().isWaitForHeuristicDuringSuspension() &&
+                                            rcvAtomicAction.hasHeuristicParticipants())) {
                                 this.hasWorkLeftToDo = true;
                             } else if (rcvAtomicAction.hasHeuristicParticipants()) {
                                 tsLogger.logger.tracef(
@@ -262,7 +266,5 @@ public class AtomicActionRecoveryModule implements RecoveryModule {
     private boolean hasWorkLeftToDo;
 
     private boolean problemDuringRecovery;
-
-    private boolean isWaitForWorkLeftToDo = recoveryPropertyManager.getRecoveryEnvironmentBean().isWaitForWorkLeftToDo();
 
 }

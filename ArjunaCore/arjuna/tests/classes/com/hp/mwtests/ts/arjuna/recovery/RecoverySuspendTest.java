@@ -60,8 +60,6 @@ public class RecoverySuspendTest {
         // Let's go quick on this
         _recoveryConfig.setRecoveryBackoffPeriod(recoveryBackoffPeriod);
         _recoveryConfig.setPeriodicRecoveryPeriod(periodicRecoveryPeriod);
-        // don't sign off until the store is empty
-        _recoveryConfig.setWaitForWorkLeftToDo(true);
 
         // the test set of modules
         _recoveryConfig.setRecoveryModuleClassNames(Arrays.asList(modules));
@@ -164,7 +162,9 @@ public class RecoverySuspendTest {
             @BMScript("RecoverySuspendTest/recoverySuspendTest_FailTest")
     })
     public void testSuspensionWhenThereIsAHeuristicMixedAtomicActionToRecoverButNotWaiting() {
-        heuristicTest(TwoPhaseOutcome.HEURISTIC_MIXED);
+        // false is the default anyway
+        _recoveryConfig.setWaitForHeuristicDuringSuspension(false);
+        heuristicTest(TwoPhaseOutcome.HEURISTIC_MIXED, 1);
     }
 
     @Test
@@ -173,10 +173,34 @@ public class RecoverySuspendTest {
             @BMScript("RecoverySuspendTest/recoverySuspendTest_FailTest")
     })
     public void testSuspensionWhenThereIsAHeuristicHazardAtomicActionToRecoverButNotWaiting() {
-        heuristicTest(TwoPhaseOutcome.HEURISTIC_HAZARD);
+        // false is the default anyway
+        _recoveryConfig.setWaitForHeuristicDuringSuspension(false);
+        heuristicTest(TwoPhaseOutcome.HEURISTIC_HAZARD, 1);
     }
 
-    private void heuristicTest(int heuristicType) {
+    @Test
+    @BMScripts(scripts = {
+            @BMScript("RecoverySuspendTest/recoverySuspendTest_BytemanControlledRecord"),
+            @BMScript("RecoverySuspendTest/recoverySuspendTest_FailTest"),
+            @BMScript("RecoverySuspendTest/recoverySuspendTest_SwitchAutomatically")
+    })
+    public void testSuspensionWhenThereIsAHeuristicHazardAtomicActionToRecoverAndWaiting() {
+        _recoveryConfig.setWaitForHeuristicDuringSuspension(true);
+        heuristicTest(TwoPhaseOutcome.HEURISTIC_HAZARD, 2);
+    }
+
+    @Test
+    @BMScripts(scripts = {
+            @BMScript("RecoverySuspendTest/recoverySuspendTest_BytemanControlledRecord"),
+            @BMScript("RecoverySuspendTest/recoverySuspendTest_FailTest"),
+            @BMScript("RecoverySuspendTest/recoverySuspendTest_SwitchAutomatically")
+    })
+    public void testSuspensionWhenThereIsAHeuristicMixedAtomicActionToRecoverAndWaiting() {
+        _recoveryConfig.setWaitForHeuristicDuringSuspension(true);
+        heuristicTest(TwoPhaseOutcome.HEURISTIC_MIXED, 2);
+    }
+
+    private void heuristicTest(int heuristicType, int numberOfCommits) {
         // Make sure that the test environment is ready
         BytemanControlledRecord.resetCommitCallCounter();
         BytemanControlledRecord.resetGreenFlag();
@@ -203,7 +227,7 @@ public class RecoverySuspendTest {
         waitForTransactionsWithoutTimeout();
 
         // Synchronization is not needed (i.e. async = true) as isWaitForWorkLeftToDo() == true
-        _manager.suspend(true);
+        _manager.suspend(true, true);
 
         Assertions.assertEquals(numberOfCommits, BytemanControlledRecord.getCommitCallCounter(),
                 String.format("BytemanControlledRecord's getCommitCallCounter is %d but it should have been %d",

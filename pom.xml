@@ -122,7 +122,6 @@
 
     <!-- Needed for WildflyLRACoordinatorDeployment class -->
     <version.microprofile.lra>2.0.1</version.microprofile.lra>
-    <version.org.apache.activemq>2.38.0</version.org.apache.activemq>
     <version.org.codehaus.mojo.jboss-maven-plugin>1.5.0</version.org.codehaus.mojo.jboss-maven-plugin>
     <version.org.eclipse.microprofile.openapi>3.1</version.org.eclipse.microprofile.openapi>
 
@@ -956,15 +955,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
-            <configuration>
-              <reportPlugins>
-                <plugin>
-                  <groupId>com.github.spotbugs</groupId>
-                  <artifactId>spotbugs-maven-plugin</artifactId>
-                  <version>${version.com.github.spotbugs.spotbugs-maven-plugin}</version>
-                </plugin>
-              </reportPlugins>
-            </configuration>
             <dependencies>
               <dependency>
                 <groupId>org.apache.maven.doxia</groupId>
@@ -995,6 +985,15 @@
           </plugin>
         </plugins>
       </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>${version.com.github.spotbugs.spotbugs-maven-plugin}</version>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
     <profile>
       <id>format</id>

@@ -89,19 +89,21 @@
 
   <profiles>
     <profile>
-      <id>release</id>
+      <id>nexusStagingDeployment</id>
+      <activation>
+        <property>
+          <name>releaseStaging</name>
+        </property>
+      </activation>
       <build>
         <plugins>
+          <!-- Don't deploy -->
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <inherited>false</inherited>
-            <executions>
-              <execution>
-                <id>default-install</id>
-                <phase>install</phase>
-              </execution>
-            </executions>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nxrm3-maven-plugin</artifactId>
+            <configuration>
+              <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+            </configuration>
           </plugin>
         </plugins>
       </build>

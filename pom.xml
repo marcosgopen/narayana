@@ -18,6 +18,7 @@
   <packaging>pom</packaging>
   <name>LRA Parent</name>
   <description>LRA Parent</description>
+  <url>https://www.narayana.io/</url>
 
   <licenses>
     <license>
@@ -27,27 +28,29 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <id>narayanaAuthors</id>
+      <name>Narayana Authors</name>
+      <organization>Commonhaus Foundation</organization>
+      <organizationUrl>https://www.commonhaus.org/</organizationUrl>
+    </developer>
+  </developers>
+
   <modules>
     <module>service-base</module>
     <module>client</module>
     <module>coordinator</module>
     <module>coordinator-war</module>
     <module>proxy</module>
-    <module>test</module>
     <module>jaxrs</module>
   </modules>
-  <distributionManagement>
-    <repository>
-      <id>jboss-releases-repository</id>
-      <name>JBoss Release Repository</name>
-      <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>jboss-snapshots-repository</id>
-      <name>JBoss Snapshot Repository</name>
-      <url>https://repository.jboss.org/nexus/repository/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
+
+  <scm>
+    <connection>scm:git:https://github.com/jbosstm/lra.git</connection>
+    <developerConnection>scm:git:git@github.com:jbosstm/lra.git</developerConnection>
+    <url>https://github.com/jbosstm/lra</url>
+  </scm>
 
   <properties>
 
@@ -60,9 +63,9 @@
     <ipv6.server.jvm.args>-Djboss.bind.address=[::1] -Djboss.bind.address.management=[::1]
       -Djboss.bind.address.unsecure=[::1] -Djava.net.preferIPv4Stack=false -Djava.net.preferIPv6Addresses=true</ipv6.server.jvm.args>
     <jvm.args.byteman>-Dorg.jboss.byteman.verbose
-                        -Djboss.modules.system.pkgs=org.jboss.byteman
-                        -Dorg.jboss.byteman.transform.all
-                        -javaagent:${project.build.directory}/lib/byteman.jar=listener:true</jvm.args.byteman>
+      -Djboss.modules.system.pkgs=org.jboss.byteman
+      -Dorg.jboss.byteman.transform.all
+      -javaagent:${project.build.directory}/lib/byteman.jar=listener:true</jvm.args.byteman>
     <jvm.args.debug></jvm.args.debug>
 
     <!-- IP stack configs. -->
@@ -82,14 +85,27 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
 
+    <!-- Protocol to use for communication with remote maven repositories.
+             You can set to 'http' if you are using a maven proxy and 'https'
+             interferes with that. Use 'https' for builds that will be released
+             to non-snapshot public maven repos -->
+    <maven.repository.protocol>https</maven.repository.protocol>
+    <!-- The full remote maven repo URL; can be overridden via -D for special use cases -->
+    <maven.repository.url>${maven.repository.protocol}://repository.jboss.org/nexus/content/groups/public/</maven.repository.url>
+
     <narayana.version>7.2.2.Final</narayana.version>
+
+    <!-- Repository Deployment Settings -->
+    <nexus.serverId>jboss</nexus.serverId>
+    <nexus.repository.release>releases</nexus.repository.release>
+    <nexus.repository.staging>narayana-staging</nexus.repository.staging>
+    <nexus.repository.url>https://repository.jboss.org/nexus/</nexus.repository.url>
+    <nexus.staging.tag>lra-${project.version}</nexus.staging.tag>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <server.jvm.args>${jvm.args.other} ${jvm.args.memory} ${jvm.args.modular}</server.jvm.args>
     <skipITs>true</skipITs>
-    <skipMavenDeployMojo>false</skipMavenDeployMojo>
-    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
     <!-- Sortpom is enabled by default, but it could be disabled in sub-modules setting sortpom.skip = true -->
     <sortpom.skip>false</sortpom.skip>
 
@@ -116,8 +132,12 @@
     <version.jakarta.ws.rs.jakarta-ws-rs-api>3.1.0</version.jakarta.ws.rs.jakarta-ws-rs-api>
     <version.jboss-modules>1.10.2.Final</version.jboss-modules>
     <version.junit>4.13.1</version.junit>
+    <version.maven.antrun-plugin>3.0.0</version.maven.antrun-plugin>
     <version.maven.checkstyle-plugin>3.6.0</version.maven.checkstyle-plugin>
     <version.maven.jandex-plugin>3.1.7</version.maven.jandex-plugin>
+    <version.maven.jar-plugin>3.2.0</version.maven.jar-plugin>
+    <version.maven.shade-plugin>3.2.4</version.maven.shade-plugin>
+    <version.maven.surefire-plugin>2.22.2</version.maven.surefire-plugin>
     <version.microprofile.config-api>3.0.2</version.microprofile.config-api>
     <version.microprofile.fault-tolerance>4.0.2</version.microprofile.fault-tolerance>
 
@@ -138,7 +158,9 @@
     <version.org.jboss.resteasy>6.2.10.Final</version.org.jboss.resteasy>
     <version.org.jboss.shrinkwrap.resolvers>3.3.2</version.org.jboss.shrinkwrap.resolvers>
     <version.org.jboss.weld>5.0.1.Final</version.org.jboss.weld>
-    <version.org.sonatype.plugins.nexus-staging-maven-plugin>1.7.0</version.org.sonatype.plugins.nexus-staging-maven-plugin>
+    <!-- replace plugin version with the latest available -->
+    <!-- https://search.maven.org/search?q=a:nxrm3-maven-plugin -->
+    <version.org.sonatype.plugins.nxrm3.plugin>1.0.7</version.org.sonatype.plugins.nxrm3.plugin>
     <version.org.wildfly.arquillian>5.0.0.Final</version.org.wildfly.arquillian>
     <version.parsson>1.1.3</version.parsson>
     <version.smallrye-converter-api>2.7.0</version.smallrye-converter-api>
@@ -438,19 +460,34 @@
 
   <repositories>
     <repository>
-      <id>jboss-public-releases-repository-group</id>
-      <name>JBoss Public Releases Maven Repository Group</name>
-      <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+      <id>jboss-public-repository-group</id>
+      <name>JBoss Public Repository Group</name>
+      <url>${maven.repository.url}</url>
+      <layout>default</layout>
     </repository>
-    <repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-      <id>repo.eclipse.org-snapshots</id>
-      <name>Eclipse MicroProfile Repository - Snapshots</name>
-      <url>https://repo.eclipse.org/content/repositories/microprofile-snapshots</url>
-    </repository>
-  </repositories>
+      <id>jboss-public-repository-group</id>
+      <name>JBoss Public Repository Group</name>
+      <url>${maven.repository.url}</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <pluginManagement>
@@ -458,6 +495,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
+          <version>${version.maven.shade-plugin}</version>
           <configuration>
             <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
           </configuration>
@@ -475,7 +513,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>${version.maven.jar-plugin}</version>
           <configuration>
             <archive>
               <manifestEntries>
@@ -500,35 +538,8 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <configuration>
-            <skip>${skipMavenDeployMojo}</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>${version.org.sonatype.plugins.nexus-staging-maven-plugin}</version>
-          <extensions>true</extensions>
-          <configuration>
-            <serverId>jboss-releases-repository</serverId>
-            <nexusUrl>https://repository.jboss.org/nexus/</nexusUrl>
-            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            <skipNexusStagingDeployMojo>${skipNexusStagingDeployMojo}</skipNexusStagingDeployMojo>
-          </configuration>
-          <executions>
-            <execution>
-              <id>nexus-deploy</id>
-              <goals>
-                <goal>deploy</goal>
-              </goals>
-              <phase>deploy</phase>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
+          <version>${version.maven.surefire-plugin}</version>
           <configuration>
             <includes>
               <!-- Unit tests running with no container involved -->
@@ -539,7 +550,25 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>${version.maven.antrun-plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.smallrye</groupId>
+          <artifactId>jandex-maven-plugin</artifactId>
+          <version>${version.maven.jandex-plugin}</version>
+          <executions>
+            <execution>
+              <id>make-index</id>
+              <goals>
+                <goal>jandex</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nxrm3-maven-plugin</artifactId>
+          <version>${version.org.sonatype.plugins.nxrm3.plugin}</version>
         </plugin>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         <plugin>
@@ -620,15 +649,27 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>io.smallrye</groupId>
-          <artifactId>jandex-maven-plugin</artifactId>
-          <version>${version.maven.jandex-plugin}</version>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nxrm3-maven-plugin</artifactId>
+          <version>${version.nxrm3.plugin}</version>
+          <configuration>
+            <serverId>${nexus.serverId}</serverId>
+            <nexusUrl>${nexus.repository.url}</nexusUrl>
+          </configuration>
           <executions>
             <execution>
-              <id>make-index</id>
-              <goals>
-                <goal>jandex</goal>
-              </goals>
+              <id>nexus-move</id>
+              <configuration>
+                <repository>${nexus.repository.staging}</repository>
+                <destinationRepository>${nexus.repository.release}</destinationRepository>
+                <tag>${nexus.staging.tag}</tag>
+              </configuration>
+            </execution>
+            <execution>
+              <id>nexus-delete</id>
+              <configuration>
+                <tag>${nexus.staging.tag}</tag>
+              </configuration>
             </execution>
           </executions>
         </plugin>
@@ -636,11 +677,6 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <inherited>false</inherited>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -664,19 +700,6 @@
             <goals>
               <goal>integration-test</goal>
               <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
             </goals>
           </execution>
         </executions>
@@ -763,38 +786,75 @@
       </plugin>
     </plugins>
   </build>
+
   <profiles>
     <profile>
-      <id>release</id>
+      <id>nexusStagingDeployment</id>
+      <activation>
+        <property>
+          <name>releaseStaging</name>
+        </property>
+      </activation>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-install-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>default-install</id>
-                  <phase>none</phase>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-gpg-plugin</artifactId>
-              <version>3.2.7</version>
-            </plugin>
-          </plugins>
-        </pluginManagement>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <inherited>false</inherited>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nxrm3-maven-plugin</artifactId>
+            <extensions>true</extensions>
             <executions>
               <execution>
-                <id>default-install</id>
-                <phase>install</phase>
+                <id>nexus-deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>staging-deploy</goal>
+                </goals>
+                <configuration>
+                  <repository>${nexus.repository.staging}</repository>
+                  <tag>${nexus.staging.tag}</tag>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <release>17</release>
+              <detectOfflineLinks>false</detectOfflineLinks>
+              <excludePackageNames>*.internal.*</excludePackageNames>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>
@@ -813,6 +873,17 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>testing</id>
+      <activation>
+        <property>
+          <name>!release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>test</module>
+      </modules>
     </profile>
     <profile>
       <id>codeCoverage</id>

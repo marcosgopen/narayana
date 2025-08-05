@@ -9,6 +9,7 @@
     <groupId>org.jboss.narayana.lra</groupId>
     <artifactId>lra-test</artifactId>
     <version>1.0.2.Final-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>lra-test-basic</artifactId>
@@ -62,13 +63,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>

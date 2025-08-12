@@ -11,6 +11,8 @@ function fatal {
 CURRENT=$(echo ${1} | awk -F '-SNAPSHOT' '{ print $1 }')
 NEXT=$(echo ${2} | awk -F '-SNAPSHOT' '{ print $1 }')
 
+ORG=$3
+
 if [ "$NEXT" == "" ]; then
     echo "usage: $0 <current version> <next version>"
     exit 1
@@ -44,20 +46,18 @@ echo ""
 echo "=== TAGGING AND UPDATING LRA ==="
 echo ""
 
-git clone git@github.com:jbosstm/lra.git || fatal
+git clone "git@github.com:$ORG/lra.git" || fatal
 cd lra
 git checkout $BRANCH || fatal
 
-if [[ "$(uname)" == "Darwin" ]] # MacOS
-then
+if [[ "$(uname)" == "Darwin" ]]; then # MacOS
   find . -name \*.java -o -name \*.xml -o -name \*.template -o -name \*.properties -o -name \*.ent -o -name \INSTALL -o -name \README -o -name pre-release-vars.sh -o -name \*.sh -o -name \*.bat -o -name \*.cxx -o -name \*.c -o -name \*.cpp -o -iname \makefile | grep -v ".svn" | grep -v ".git" | grep -v target | grep -v .idea | xargs sed -i "" "s/$CURRENT_SNAPSHOT_VERSION/$CURRENT/g" || fatal
 else
   find . -name \*.java -o -name \*.xml -o -name \*.template -o -name \*.properties -o -name \*.ent -o -name \INSTALL -o -name \README -o -name pre-release-vars.sh -o -name \*.sh -o -name \*.bat -o -name \*.cxx -o -name \*.c -o -name \*.cpp -o -iname \makefile | grep -v ".svn" | grep -v ".git" | grep -v target | grep -v .idea | xargs sed -i "s/$CURRENT_SNAPSHOT_VERSION/$CURRENT/g" || fatal
 fi
 set +e
 git status | grep "new\|deleted"
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]; then
   "Found new files changing to tag - very strange!"
   exit
 fi
@@ -69,16 +69,14 @@ if [ $toCommit -ge 1 ]; then
 fi
 git tag $CURRENT || fatal
 
-if [[ "$(uname)" == "Darwin" ]] # MacOS
-then
+if [[ "$(uname)" == "Darwin" ]]; then # MacOS
   find . -name \*.java -o -name \*.xml -o -name \*.template -o -name \*.properties -o -name \*.ent -o -name \INSTALL -o -name \README -o -name pre-release-vars.sh -o -name \*.sh -o -name \*.bat -o -name \*.cxx -o -name \*.c -o -name \*.cpp -o -iname \makefile | grep -v ".svn" | grep -v ".git" | grep -v target | grep -v .idea | xargs sed -i "" "s/$CURRENT/$NEXT/g" || fatal
 else
   find . -name \*.java -o -name \*.xml -o -name \*.template -o -name \*.properties -o -name \*.ent -o -name \INSTALL -o -name \README -o -name pre-release-vars.sh -o -name \*.sh -o -name \*.bat -o -name \*.cxx -o -name \*.c -o -name \*.cpp -o -iname \makefile | grep -v ".svn" | grep -v ".git" | grep -v target | grep -v .idea | xargs sed -i "s/$CURRENT/$NEXT/g" || fatal
 fi
 set +e
 git status | grep "new\|deleted"
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]; then
   "Found new files changing to new snapshot - very strange!"
   exit
 fi

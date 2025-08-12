@@ -1,10 +1,15 @@
 name: JACOCO-PROFILE
 
 on:
-  workflow_dispatch:
+  push:
   pull_request:
-    branches:
-      - main
+    types: [ opened, labeled, unlabeled ]
+  workflow_dispatch:
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
 
 jobs:
   core-test:
@@ -16,15 +21,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        
+      - name: Check for `testing/jacoco` label
+        id: check-label
+        run: |
+          echo "should_skip=false" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "Checking labels on PR #${{ github.event.pull_request.number }}..."
+            LABELS=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name')
+            echo "Labels found: $LABELS"
+            if ! echo "$LABELS" | grep -q "^testing/jacoco$"; then
+              echo "Label 'testing/jacoco' not found. Skipping job."
+              echo "should_skip=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
-      - uses: actions/setup-java@v4
-        name: Set up JDK ${{ matrix.java-version }}
+      - name: Set up JDK ${{ matrix.java-version }}
+        if: steps.check-label.outputs.should_skip != 'true'
+        uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java-version }}
           distribution: temurin
-          cache: maven
+          java-version: ${{ matrix.java-version }}
+
+      - name: Cache Maven dependencies
+        if: steps.check-label.outputs.should_skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository/*/*
+            !~/.m2/repository/org/jboss
+            !~/.m2/repository/org/wildfly
+          key: maven-${{ runner.os }}-core
+          restore-keys: |
+            maven-${{ runner.os }}-
 
       - name: JACOCO test
+        if: steps.check-label.outputs.should_skip != 'true'
         run: |
           git config --global user.email "lra@jbosstm.com"
           git config --global user.name "lra-bot"
@@ -33,7 +67,7 @@ jobs:
           LRA_TCK_TIMEOUT_FACTOR: 1
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: steps.check-label.outputs.should_skip != 'true' && always()
         with:
           name: core-logs-jdk${{ matrix.java-version }}
           path: |
@@ -41,6 +75,7 @@ jobs:
             **/ObjectStore*/**
             **/tx-object-store/**
             **/*tx-object-store.zip
+            **/target/*surefire-reports*/**
             **/target/*failsafe-reports*/**
             **/target/site/**
             **/*.exec

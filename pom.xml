@@ -93,12 +93,12 @@
     <maven.repository.url>${maven.repository.protocol}://repository.jboss.org/nexus/content/groups/public/</maven.repository.url>
 
     <narayana.version>7.2.2.Final</narayana.version>
-
-    <!-- Repository Deployment Settings -->
-    <nexus.serverId>jboss</nexus.serverId>
     <nexus.repository.release>releases</nexus.repository.release>
     <nexus.repository.staging>narayana-staging</nexus.repository.staging>
     <nexus.repository.url>https://repository.jboss.org/nexus/</nexus.repository.url>
+
+    <!-- Repository Deployment Settings -->
+    <nexus.serverId>jboss</nexus.serverId>
     <nexus.staging.tag>lra-${project.version}</nexus.staging.tag>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -809,10 +809,10 @@
             <executions>
               <execution>
                 <id>nexus-deploy</id>
-                <phase>deploy</phase>
                 <goals>
                   <goal>staging-deploy</goal>
                 </goals>
+                <phase>deploy</phase>
                 <configuration>
                   <repository>${nexus.repository.staging}</repository>
                   <tag>${nexus.staging.tag}</tag>

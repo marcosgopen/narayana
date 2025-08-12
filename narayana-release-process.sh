@@ -77,7 +77,7 @@ fi
 echo "This script is only interactive at the very end now, press enter to continue"
 read
 
-cd ~/tmp/lra/$CURRENT/sources/lra/
+cd ~/tmp/lra/$CURRENT/lra/
 rm -rf localm2repo
 git checkout $CURRENT
 if [[ $? != 0 ]]; then

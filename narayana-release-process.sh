@@ -1,23 +1,22 @@
 #!/bin/bash
 
-# You need to run this script with at least 2 arguments.
-# The third argument ORG is optional.
+# You need to run this script with 3 arguments.
 # Arguments are then transformed to env variables CURRENT, NEXT, and ORG.
 # Release process releases version ${CURRENT} and prepares github with commits to ${NEXT}-SNAPSHOT
 #
 # 3 arguments: `./narayana-release-process.sh CURRENT NEXT ORG`
 
-if [ $# -lt 2 ]; then
+if [ $# -lt 3 ]; then
   echo 1>&2 "$0: usage: CURRENT NEXT ORG"
   exit 2
 else
   CURRENT=$1
   NEXT=$2
-  if [ -z "$3" ]; then
-    ORG=jbosstm
-  else
-    ORG=$3
+  if [[ $3 == "jbosstm" ]]; then
+    echo "jbosstm isn't a valid organization. Please use your fork to proceed with the release."
+    exit 2
   fi
+  ORG=$3
 fi
 
 echo "You will need: VPN, credentials for jbosstm host, jira admin, github permissions on all $ORG repo and nexus permissions." 

@@ -85,9 +85,9 @@
     <maven.compiler.release>17</maven.compiler.release>
 
     <!-- Protocol to use for communication with remote maven repositories.
-             You can set to 'http' if you are using a maven proxy and 'https'
-             interferes with that. Use 'https' for builds that will be released
-             to non-snapshot public maven repos -->
+         You can set to 'http' if you are using a maven proxy and 'https'
+         interferes with that. Use 'https' for builds that will be released
+         to non-snapshot public maven repos -->
     <maven.repository.protocol>https</maven.repository.protocol>
     <!-- The full remote maven repo URL; can be overridden via -D for special use cases -->
     <maven.repository.url>${maven.repository.protocol}://repository.jboss.org/nexus/content/groups/public/</maven.repository.url>
@@ -568,7 +568,7 @@
           <artifactId>nxrm3-maven-plugin</artifactId>
           <version>${version.org.sonatype.plugins.nxrm3.plugin}</version>
         </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>
@@ -905,10 +905,8 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>${version.org.jacoco}</version>
             <executions>
-              <!--
-                     Prepares the property pointing to the JaCoCo runtime agent which
-                     is passed as VM argument when Maven the Surefire plugin is executed.
-                 -->
+              <!-- Prepares the property pointing to the JaCoCo runtime agent which
+                   is passed as VM argument when Maven the Surefire plugin is executed. -->
               <execution>
                 <id>pre-unit-test</id>
                 <goals>
@@ -917,17 +915,11 @@
                 <configuration>
                   <!-- Sets the path to the file which contains the execution data. -->
                   <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                  <!--
-                             Sets the name of the property containing the settings
-                             for JaCoCo runtime agent.
-                         -->
+                  <!-- Sets the name of the property containing the settings for JaCoCo runtime agent. -->
                   <propertyName>surefireArgLine</propertyName>
                 </configuration>
               </execution>
-              <!--
-                     Ensures that the code coverage report for unit tests is created after
-                     unit tests have been run.
-                 -->
+              <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run. -->
               <execution>
                 <id>post-unit-test</id>
                 <goals>
@@ -961,30 +953,26 @@
                           <value>COVEREDRATIO</value>
                           <minimum>0.0</minimum>
                         </limit>
-                        <!--
-                                  <limit>
-                                    <counter>CLASS</counter>
-                                    <value>MISSEDCOUNT</value>
-                                    <maximum>0</maximum>
-                                  </limit>
-								  -->
+<!--                        <limit>-->
+<!--                          <counter>CLASS</counter>-->
+<!--                          <value>MISSEDCOUNT</value>-->
+<!--                          <maximum>0</maximum>-->
+<!--                        </limit>-->
                       </limits>
                     </rule>
-                    <!--
-                              <rule>
-                                <element>CLASS</element>
-                                <excludes>
-                                  <exclude>*Test</exclude>
-                                </excludes>
-                                <limits>
-                                  <limit>
-                                    <counter>LINE</counter>
-                                    <value>COVEREDRATIO</value>
-                                    <minimum>0.20</minimum>
-                                  </limit>
-                                </limits>
-                              </rule>
-							  -->
+<!--                    <rule>-->
+<!--                      <element>CLASS</element>-->
+<!--                      <excludes>-->
+<!--                        <exclude>*Test</exclude>-->
+<!--                      </excludes>-->
+<!--                      <limits>-->
+<!--                        <limit>-->
+<!--                          <counter>LINE</counter>-->
+<!--                          <value>COVEREDRATIO</value>-->
+<!--                          <minimum>0.20</minimum>-->
+<!--                        </limit>-->
+<!--                      </limits>-->
+<!--                    </rule>-->
                   </rules>
                 </configuration>
               </execution>
@@ -1157,6 +1145,5 @@
         </plugins>
       </build>
     </profile>
-
   </profiles>
 </project>

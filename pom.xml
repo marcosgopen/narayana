@@ -93,12 +93,12 @@
     <maven.repository.url>${maven.repository.protocol}://repository.jboss.org/nexus/content/groups/public/</maven.repository.url>
 
     <narayana.version>7.2.2.Final</narayana.version>
-    <nexus.repository.release>releases</nexus.repository.release>
+
+    <!-- Nexus Settings -->
+    <nexus.repository.release>narayana</nexus.repository.release>
     <nexus.repository.staging>narayana-staging</nexus.repository.staging>
     <nexus.repository.url>https://repository.jboss.org/nexus/</nexus.repository.url>
-
-    <!-- Repository Deployment Settings -->
-    <nexus.serverId>jboss</nexus.serverId>
+    <nexus.serverId>jboss-releases-repository</nexus.serverId>
     <nexus.staging.tag>lra-${project.version}</nexus.staging.tag>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -142,7 +142,6 @@
 
     <!-- Needed for WildflyLRACoordinatorDeployment class -->
     <version.microprofile.lra>2.0.1</version.microprofile.lra>
-    <version.nxrm3.plugin>1.0.7</version.nxrm3.plugin>
     <version.org.apache.activemq>2.41.0</version.org.apache.activemq>
     <version.org.codehaus.mojo.jboss-maven-plugin>1.5.0</version.org.codehaus.mojo.jboss-maven-plugin>
     <version.org.eclipse.microprofile.openapi>3.1</version.org.eclipse.microprofile.openapi>
@@ -567,6 +566,14 @@
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nxrm3-maven-plugin</artifactId>
           <version>${version.org.sonatype.plugins.nxrm3.plugin}</version>
+          <configuration>
+            <serverId>${nexus.serverId}</serverId>
+            <nexusUrl>${nexus.repository.url}</nexusUrl>
+            <repository>${nexus.repository.staging}</repository>
+            <tag>${nexus.staging.tag}</tag>
+            <sourceRepository>${nexus.repository.staging}</sourceRepository>
+            <destinationRepository>${nexus.repository.release}</destinationRepository>
+          </configuration>
         </plugin>
         <!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
         <plugin>
@@ -645,31 +652,6 @@
               </pluginExecutions>
             </lifecycleMappingMetadata>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nxrm3-maven-plugin</artifactId>
-          <version>${version.nxrm3.plugin}</version>
-          <configuration>
-            <serverId>${nexus.serverId}</serverId>
-            <nexusUrl>${nexus.repository.url}</nexusUrl>
-          </configuration>
-          <executions>
-            <execution>
-              <id>nexus-move</id>
-              <configuration>
-                <repository>${nexus.repository.staging}</repository>
-                <destinationRepository>${nexus.repository.release}</destinationRepository>
-                <tag>${nexus.staging.tag}</tag>
-              </configuration>
-            </execution>
-            <execution>
-              <id>nexus-delete</id>
-              <configuration>
-                <tag>${nexus.staging.tag}</tag>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -813,10 +795,6 @@
                   <goal>staging-deploy</goal>
                 </goals>
                 <phase>deploy</phase>
-                <configuration>
-                  <repository>${nexus.repository.staging}</repository>
-                  <tag>${nexus.staging.tag}</tag>
-                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -953,26 +931,26 @@
                           <value>COVEREDRATIO</value>
                           <minimum>0.0</minimum>
                         </limit>
-<!--                        <limit>-->
-<!--                          <counter>CLASS</counter>-->
-<!--                          <value>MISSEDCOUNT</value>-->
-<!--                          <maximum>0</maximum>-->
-<!--                        </limit>-->
+                        <!--                        <limit>-->
+                        <!--                          <counter>CLASS</counter>-->
+                        <!--                          <value>MISSEDCOUNT</value>-->
+                        <!--                          <maximum>0</maximum>-->
+                        <!--                        </limit>-->
                       </limits>
                     </rule>
-<!--                    <rule>-->
-<!--                      <element>CLASS</element>-->
-<!--                      <excludes>-->
-<!--                        <exclude>*Test</exclude>-->
-<!--                      </excludes>-->
-<!--                      <limits>-->
-<!--                        <limit>-->
-<!--                          <counter>LINE</counter>-->
-<!--                          <value>COVEREDRATIO</value>-->
-<!--                          <minimum>0.20</minimum>-->
-<!--                        </limit>-->
-<!--                      </limits>-->
-<!--                    </rule>-->
+                    <!--                    <rule>-->
+                    <!--                      <element>CLASS</element>-->
+                    <!--                      <excludes>-->
+                    <!--                        <exclude>*Test</exclude>-->
+                    <!--                      </excludes>-->
+                    <!--                      <limits>-->
+                    <!--                        <limit>-->
+                    <!--                          <counter>LINE</counter>-->
+                    <!--                          <value>COVEREDRATIO</value>-->
+                    <!--                          <minimum>0.20</minimum>-->
+                    <!--                        </limit>-->
+                    <!--                      </limits>-->
+                    <!--                    </rule>-->
                   </rules>
                 </configuration>
               </execution>

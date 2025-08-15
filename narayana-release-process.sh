@@ -12,10 +12,6 @@ if [ $# -lt 3 ]; then
 else
   CURRENT=$1
   NEXT=$2
-  if [[ $3 == "jbosstm" ]]; then
-    echo "jbosstm isn't a valid organization. Please use your fork to proceed with the release."
-    exit 2
-  fi
   ORG=$3
 fi
 
@@ -28,7 +24,7 @@ fi
 
 # add the upstream remote
 git remote -v | grep upstream
-if [[ $? != 0 ]]; then
+if [[ $? != 0 && $ORG != jbosstm ]]; then
   git remote add upstream git@github.com:jbosstm/lra.git
 fi
 

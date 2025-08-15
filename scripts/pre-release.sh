@@ -85,4 +85,3 @@ toCommit=`git diff | wc -l`
 if [ $toCommit -ge 1 ]; then
   git commit -am "Updated to $NEXT" || fatal
 fi
-git push origin $BRANCH --tags || fatal

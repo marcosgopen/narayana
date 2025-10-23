@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'jdk25'
   pull_request:
     types: [ opened, edited, synchronize, ready_for_review, labeled, unlabeled, reopened ]
   workflow_dispatch:

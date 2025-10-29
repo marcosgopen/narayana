@@ -1,0 +1,62 @@
+name: JTA
+
+on:
+  push:
+  workflow_dispatch:
+    
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  core-test:
+    strategy:
+      matrix:
+        java-version: [ 25 ]
+    name: JTA test with JDK ${{ matrix.java-version }}
+    timeout-minutes: 120
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      
+      - name: Set up JDK ${{ matrix.java-version }}
+        if: steps.check-label.outputs.should_skip != 'true'
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+
+      - name: Cache Maven dependencies
+        if: steps.check-label.outputs.should_skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository/*/*
+            !~/.m2/repository/org/jboss
+            !~/.m2/repository/org/wildfly
+          key: maven-${{ runner.os }}-core
+          restore-keys: |
+            maven-${{ runner.os }}-
+
+      - name: CORE testing profile
+        if: steps.check-label.outputs.should_skip != 'true'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"  
+          mvn clean install
+          mvn install -f ArjunaJTA/jta/pom.xml
+
+      - uses: actions/upload-artifact@v4
+        if: steps.check-label.outputs.should_skip != 'true' && always()
+        with:
+          name: core-logs-jdk${{ matrix.java-version }}
+          path: |
+            jboss-as/dist/target/wildfly-*/standalone/log/
+            **/ObjectStore*/**
+            **/tx-object-store/**
+            **/*tx-object-store.zip
+            **/target/*surefire-reports*/**
+            **/target/*failsafe-reports*/**
+          if-no-files-found: error

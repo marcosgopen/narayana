@@ -23,7 +23,7 @@
     <ipv6.server.jvm.args>-Djboss.bind.address=[::1] -Djboss.bind.address.management=[::1]
       -Djboss.bind.address.unsecure=[::1] -Djava.net.preferIPv4Stack=false -Djava.net.preferIPv6Addresses=false</ipv6.server.jvm.args>
     <!-- required for VM attach under JDK 11-->
-    <surefire.argline>-Djdk.attach.allowAttachSelf=true</surefire.argline>
+    <surefire.argline>${jvm.args.byteman}</surefire.argline>
   </properties>
 
   <dependencyManagement>

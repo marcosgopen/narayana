@@ -491,9 +491,7 @@ public class CommitMarkableResourceRecord extends AbstractRecord {
 					connectableResource.toString(), "-", e);
 				return TwoPhaseOutcome.FINISH_ERROR;
 			} finally {
-				if (!isPerformImmediateCleanupOfBranches) {
-					removeConnection();
-				}
+				removeConnection();
 			}
 		} else {
 			// This is a recovery scenario

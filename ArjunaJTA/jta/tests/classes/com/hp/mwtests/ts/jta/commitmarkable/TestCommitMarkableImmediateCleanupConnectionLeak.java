@@ -75,15 +75,12 @@ public class TestCommitMarkableImmediateCleanupConnectionLeak extends TestCommit
 		assertTrue("the prepare Connection must be closed after a successful 2PC commit",
 				nonXAResource.allClosed());
 
-		Statement statement = dataSource.getConnection().createStatement();
-		try {
-			ResultSet result = statement.executeQuery("select count(*) from xids");
-			result.next();
+		try (Connection verificationConnection = dataSource.getConnection();
+				Statement statement = verificationConnection.createStatement();
+				ResultSet result = statement.executeQuery("select count(*) from xids")) {
+			assertTrue("xids count query must return a row", result.next());
 			assertEquals("immediate cleanup should DELETE the xids row", 0,
 					result.getInt(1));
-			result.close();
-		} finally {
-			statement.close();
 		}
 
 		assertFalse(localJDBCConnection.isClosed());

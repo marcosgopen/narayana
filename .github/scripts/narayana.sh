@@ -42,7 +42,7 @@ function init_test_variables {
 
   min_java "Narayana does not support JDKs less than 17"
 
-  [ $NARAYANA_CURRENT_VERSION ] || NARAYANA_CURRENT_VERSION="7.3.4.Final-SNAPSHOT"
+  [ $NARAYANA_CURRENT_VERSION ] || NARAYANA_CURRENT_VERSION=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)
   [ $CODE_COVERAGE ] || CODE_COVERAGE=0
   [ x"$CODE_COVERAGE_ARGS" != "x" ] || CODE_COVERAGE_ARGS=""
   [ $ARQ_PROF ] || ARQ_PROF=arq	# IPv4 arquillian profile
@@ -606,7 +606,7 @@ function perf_tests {
     [ $? -eq 0 ] || fatal "git rebase failed"
   fi
 
-  BUILD_NARAYANA=n WORKSPACE=$(pwd) ./scripts/run_bm.sh || :
+  BUILD_NARAYANA=n WORKSPACE=$(pwd) ./.github/scripts/performance.sh || :
   res=$?
   cd $WORKSPACE
 

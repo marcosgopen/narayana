@@ -10,11 +10,11 @@
   <parent>
     <groupId>org.jboss</groupId>
     <artifactId>jboss-parent</artifactId>
-    <version>52</version>
+    <version>51</version>
   </parent>
   <groupId>org.jboss.narayana</groupId>
   <artifactId>narayana-all</artifactId>
-  <version>7.3.4.Final-SNAPSHOT</version>
+  <version>7.3.5.Final-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Narayana: all</name>
   <description>${project.artifactId}</description>
@@ -184,22 +184,23 @@
     <sortpom.skip>false</sortpom.skip>
     <!-- The surefire/failsafe test execution logs goes to a file by default -->
     <testLogToFile>true</testLogToFile>
-    <version.com.github.spotbugs.spotbugs-maven-plugin>4.9.8.3</version.com.github.spotbugs.spotbugs-maven-plugin>
+    <version.com.github.spotbugs.spotbugs-maven-plugin>4.10.4.0</version.com.github.spotbugs.spotbugs-maven-plugin>
 
     <version.doxia>1.11.1</version.doxia>
+    <version.infinispan>16.2.2</version.infinispan>
     <version.io.narayana.checkstyle-config>1.0.1.Final</version.io.narayana.checkstyle-config>
     <version.javadoc.plugin>3.5.0</version.javadoc.plugin>
-    <version.maven.jandex-plugin>3.5.3</version.maven.jandex-plugin>
-    <version.org.apache.maven.plugins.maven-surefire-plugin>3.5.5</version.org.apache.maven.plugins.maven-surefire-plugin>
+    <version.maven.jandex-plugin>3.6.0</version.maven.jandex-plugin>
+    <version.org.apache.maven.plugins.maven-surefire-plugin>3.5.6</version.org.apache.maven.plugins.maven-surefire-plugin>
 
     <version.org.codehaus.mojo.jboss-maven-plugin>1.5.0</version.org.codehaus.mojo.jboss-maven-plugin>
 
     <!-- This property is used in WarDeployment (XTS) -->
     <version.org.dom4j>2.2.0</version.org.dom4j>
 
-    <version.org.jacoco>0.8.14</version.org.jacoco>
+    <version.org.jacoco>0.8.15</version.org.jacoco>
     <version.org.jboss.as.plugins.jboss-as-maven-plugin>7.9.Final</version.org.jboss.as.plugins.jboss-as-maven-plugin>
-    <version.org.jboss.resteasy>6.2.14.Final</version.org.jboss.resteasy>
+    <version.org.jboss.resteasy>6.2.17.Final</version.org.jboss.resteasy>
     <version.org.sonatype.plugins.nxrm3.plugin>1.0.13</version.org.sonatype.plugins.nxrm3.plugin>
     <version.quarkus-bom>3.0.1.Final</version.quarkus-bom>
     <version.quarkus-maven-plugin>3.0.1.Final</version.quarkus-maven-plugin>
@@ -262,7 +263,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.5.1</version>
           <configuration>
             <archive>
               <manifestEntries>
@@ -466,7 +467,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <configuration combine.self="append">
+        <configuration combine.self="merge">
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
           <childDelegation>true</childDelegation>
@@ -496,6 +497,16 @@
     </plugins>
   </build>
   <profiles>
+    <!-- Experimental features profile - NOT activated by default -->
+    <profile>
+      <id>experimental</id>
+      <activation>
+        <!-- NOT activated by default - must explicitly use -Pexperimental -->
+      </activation>
+      <modules>
+        <module>experimental/arjuna-objectstore-distributed-experimental</module>
+      </modules>
+    </profile>
     <profile>
       <id>documentation</id>
       <activation>

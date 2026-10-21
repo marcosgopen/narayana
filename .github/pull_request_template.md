@@ -6,7 +6,9 @@ Please refer to our [guidelines for making contributions](https://github.com/jbo
 
 The build axes can be controlled either by prefixing them with a `!` or by adding only the ones needed:
 
-CORE AS_TESTS RTS JACOCO XTS QA_JTA QA_JTS_OPENJDKORB PERFORMANCE DB_TESTS mysql db2 postgres oracle
+CORE AS_TESTS RTS JACOCO XTS QA_JTA QA_JTS_OPENJDKORB PERFORMANCE QUICKSTART EXPERIMENTAL DB_TESTS mysql db2 postgres oracle
+
+Alternatively, specify `NO_TESTS` to skip all build axes.
 
 > [!IMPORTANT]  
 > If the DB_TESTS axis is enabled but no database is selected, all databases will be tested by default. Multiple databases may be selected.
@@ -16,3 +18,5 @@ Pull requests build and run with one of the following JDKs: JDK17, JDK21, and JD
 You may trigger a performance repo Pull Request by including, in the PR description, the PERFORMANCE axis and PERF_PR_NUMBER containing the performance PR number. You can define which benchmarks to run by setting BENCHMARKS to a comma or blank separated list of benchmarks. The performance benchmarks use JMH which can be tuned for the run using the variables JMH_MEASUREMENT_TIME, JMH_FORKS, JMH_WARMUP_ITERATIONS and JMH_MEASUREMENT_ITERATIONS - the defaults are 120, 5, 10 and 10, respectively.
 
 Similarly you may trigger a quickstart repo Pull Request by specifying the QUICKSTART axis and QUICKSTART_PR_NUMBER in the PR description. For example `QUICKSTART QUICKSTART_PR_NUMBER=775`
+
+You may also test against specific upstream branches by setting AS_BRANCH (the branch/commit of jboss-as to check out) and/or SPI_BRANCH (the branch/commit of jboss-transaction-spi to check out) in the PR description. For example `AS_BRANCH=main SPI_BRANCH=main`
